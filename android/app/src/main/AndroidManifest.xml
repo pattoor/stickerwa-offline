@@ -34,7 +34,13 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
 
-        <!-- WhatsApp Stickers Content Provider (removed for testing) -->
+        <!-- WhatsApp Stickers Content Provider -->
+        <provider
+            android:name=".StickerContentProvider"
+            android:authorities="com.stickerswpp.stickercontentprovider"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            android:readPermission="com.whatsapp.sticker.READ" />
     </application>
 
     <!-- Permissions -->
