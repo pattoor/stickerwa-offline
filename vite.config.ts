@@ -7,7 +7,7 @@ export default defineConfig({
   resolve: {
     alias: { "@": path.resolve(__dirname, "src") },
   },
-  server: { port: 5173, strictPort: true },
+  server: { port: 5173, strictPort: true, watch: { ignored: ["**/android/**", "**/ios/**"] } },
   build: {
     outDir: "dist",
     sourcemap: false,

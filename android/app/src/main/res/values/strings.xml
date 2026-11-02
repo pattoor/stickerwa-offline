@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Stickers WPP</string>
+    <string name="title_activity_main">Stickers WPP</string>
+    <string name="package_name">com.stickerswpp.app</string>
+    <string name="custom_url_scheme">com.stickerswpp.app</string>
+</resources>
