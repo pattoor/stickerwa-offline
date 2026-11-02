@@ -65,25 +65,19 @@ jobs:
 
       - name: Build APK (release)
         if: steps.type.outputs.type == 'release'
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          if [ -z "$KEYSTORE_BASE64" ]; then
-            echo "No keystore secret found, falling back to debug build"
-            cd android && ./gradlew assembleDebug
-            echo "type=debug" >> $GITHUB_OUTPUT
-          else
-            echo "$KEYSTORE_BASE64" | base64 -d > android/keystore.jks
-            cd android && ./gradlew assembleRelease \
+          cd android && chmod +x ./gradlew
+          if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
+            ./gradlew assembleRelease \
               -Pandroid.injected.signing.store.file=keystore.jks \
-              -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
-              -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
-              -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
+              -Pandroid.injected.signing.store.password="${{ secrets.KEYSTORE_PASSWORD }}" \
+              -Pandroid.injected.signing.key.alias="${{ secrets.KEY_ALIAS }}" \
+              -Pandroid.injected.signing.key.password="${{ secrets.KEY_PASSWORD }}"
+          else
+            echo "No keystore configured, building debug APK for release"
+            ./gradlew assembleDebug --stacktrace --no-daemon
           fi
-        id: release_build
 
       - name: Locate APK
         id: apk
