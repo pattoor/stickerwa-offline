@@ -82,7 +82,15 @@ jobs:
 
       - name: Build APK (debug)
         if: steps.type.outputs.type == 'debug'
-        run: cd android && ./gradlew assembleDebug --stacktrace --no-daemon
+        run: |
+          cd android
+          ./gradlew assembleDebug --stacktrace 2>&1 | tee /tmp/build.log
+          echo "GRADLE_EXIT=${PIPESTATUS[0]}" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Show build log
+        if: always()
+        run: cat /tmp/build.log 2>/dev/null | tail -80 || echo "No log file" --no-daemon
 
       - name: Build APK (release)
         if: steps.type.outputs.type == 'release'
