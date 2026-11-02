@@ -61,7 +61,7 @@ jobs:
 
       - name: Build APK (debug)
         if: steps.type.outputs.type == 'debug'
-        run: cd android && ./gradlew assembleDebug --stacktrace --no-daemon
+        run: cd android && chmod +x ./gradlew && ./gradlew assembleDebug --stacktrace --no-daemon
 
       - name: Build APK (release)
         if: steps.type.outputs.type == 'release'
