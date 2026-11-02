@@ -75,21 +75,14 @@ jobs:
             echo "type=debug" >> $GITHUB_OUTPUT
           fi
 
-      - name: Build APK (debug)
-        if: steps.type.outputs.type == 'debug'
+      - name: Test Gradle
         run: |
           cd android
-          ./gradlew assembleDebug --stacktrace --no-daemon 2>&1 | tee build.log
-          echo "EXIT_CODE=${PIPESTATUS[0]}" >> $GITHUB_ENV
-        continue-on-error: true
+          ./gradlew tasks 2>&1 | head -40
 
-      - name: Upload build log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-log
-          path: android/build.log
-          retention-days: 7
+      - name: Build APK (debug)
+        if: steps.type.outputs.type == 'debug'
+        run: cd android && ./gradlew assembleDebug --stacktrace --no-daemon
 
       - name: Build APK (release)
         if: steps.type.outputs.type == 'release'
