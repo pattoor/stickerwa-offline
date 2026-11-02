@@ -52,6 +52,26 @@ npx cap open android # open in Android Studio
 
 APKs are published via GitHub Releases on `v*` tags. See `.github/workflows/`.
 
+## Dev builds (APK sin instalar Android Studio)
+
+Cada push a la rama `dev` genera un APK debug automáticamente en GitHub Actions.
+
+1. Hacé tus cambios y pusheá a `dev`:
+   ```bash
+   git checkout dev
+   git add -A && git commit -m "tu cambio"
+   git push origin dev
+   ```
+2. Esperá ~5-10 min a que GitHub Actions termine.
+3. Andá a https://github.com/pattoor/stickerwa-offline/actions
+4. Descargá el artefacto `stickers-wpp-debug-dev-...`
+5. Descomprimí y instalá el APK en tu celular (activá "fuentes desconocidas").
+
+Para releases estables, pusheá un tag:
+```bash
+git tag v0.1.0 && git push origin v0.1.0
+```
+
 ## License
 
 MIT
