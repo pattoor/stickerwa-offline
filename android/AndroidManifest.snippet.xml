@@ -1,0 +1,11 @@
+<!-- Add inside <application> in AndroidManifest.xml -->
+<provider
+    android:name=".StickerContentProvider"
+    android:authorities="com.stickerswpp.stickercontentprovider"
+    android:exported="true"
+    android:grantUriPermissions="true"
+    android:readPermission="com.whatsapp.sticker.READ" />
+
+<meta-data
+    android:name="com.whatsapp.sticker.STICKER_PACKS"
+    android:value="@array/whatsapp_sticker_packs" />

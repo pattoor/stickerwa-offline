@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+*.apk
+*.ipa
+*.aab
+
+# Capacitor
+android/app/build/
+android/.gradle/
+android/local.properties
+ios/App/Pods/
+ios/App/App/public/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# SQLite (local dev DB)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Temp
+.tmp/
+temp/
