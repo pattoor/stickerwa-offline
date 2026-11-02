@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
-import { Moon, Sun, Info, Download } from "lucide-react";
+import { Moon, Sun, Info, Download, HardDrive, Upload, FileDown } from "lucide-react";
 import { useThemeStore } from "@/stores/themeStore";
 import { isBgModelCached } from "@/lib/canvas/bgRemoval";
+import { downloadBackup, restoreBackup } from "@/lib/backup/backup";
 
 export function SettingsPage() {
-  const { isDark, toggle } = useThemeStore();
+  const { isDark, mode, setMode } = useThemeStore();
 
   return (
     <div className="mx-auto max-w-md px-3 pt-3">
@@ -13,18 +14,20 @@ export function SettingsPage() {
       <section className="mb-4 overflow-hidden rounded-xl bg-white shadow-sm dark:bg-slate-800">
         <Row
           icon={isDark ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-          title="Modo oscuro"
-          subtitle={isDark ? "Activado" : "Desactivado"}
+          title="Tema"
+          subtitle={mode === "auto" ? "Automático (sistema)" : isDark ? "Oscuro" : "Claro"}
           right={
-            <button
-              onClick={toggle}
-              className={`relative h-6 w-11 rounded-full transition-colors ${isDark ? "bg-brand-600" : "bg-slate-300"}`}
-              aria-label="Toggle dark mode"
-            >
-              <span
-                className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${isDark ? "translate-x-4" : "translate-x-0"}`}
-              />
-            </button>
+            <div className="flex gap-1">
+              {(["auto", "dark", "light"] as const).map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setMode(m)}
+                  className={`rounded-md px-2 py-1 text-xs ${mode === m ? "bg-brand-600 text-white" : "bg-slate-100 dark:bg-slate-700"}`}
+                >
+                  {m === "auto" ? "Auto" : m === "dark" ? "Oscuro" : "Claro"}
+                </button>
+              ))}
+            </div>
           }
         />
       </section>
@@ -36,6 +39,45 @@ export function SettingsPage() {
           subtitle={isBgModelCached() ? "Modelo descargado" : "Descarga opcional (~40MB) en el primer uso"}
           right={<span className="text-xs text-slate-400">{isBgModelCached() ? "Listo" : "Opcional"}</span>}
         />
+      </section>
+
+      <section className="mb-4 overflow-hidden rounded-xl bg-white shadow-sm dark:bg-slate-800">
+        <div className="px-4 py-3">
+          <div className="mb-2 flex items-center gap-2">
+            <HardDrive className="h-5 w-5 text-slate-500 dark:text-slate-400" />
+            <span className="text-sm font-medium">Backup / Restore</span>
+          </div>
+          <p className="mb-3 text-xs text-slate-500 dark:text-slate-400">
+            Exportá todos tus stickers, packs y configuración. Restaurá desde un backup anterior.
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={downloadBackup}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-brand-600 py-2 text-xs font-medium text-white"
+            >
+              <FileDown className="h-4 w-4" />
+              Exportar backup
+            </button>
+            <button
+              onClick={() => {
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = ".json,application/json";
+                input.onchange = async () => {
+                  const file = input.files?.[0];
+                  if (!file) return;
+                  const result = await restoreBackup(file);
+                  alert(result.message);
+                };
+                input.click();
+              }}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-slate-100 py-2 text-xs font-medium dark:bg-slate-700"
+            >
+              <Upload className="h-4 w-4" />
+              Importar backup
+            </button>
+          </div>
+        </div>
       </section>
 
       <section className="overflow-hidden rounded-xl bg-white shadow-sm dark:bg-slate-800">

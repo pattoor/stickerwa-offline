@@ -2,7 +2,7 @@ name: Build Android
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   push:
     tags: ["v*"]
   workflow_dispatch:
@@ -94,7 +94,7 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: stickers-wpp-${{ steps.type.outputs.type }}-${{ github.sha }}
+          name: stickers-wpp-${{ steps.type.outputs.type }}-${{ github.ref_name }}-${{ github.sha }}
           path: ${{ steps.apk.outputs.path }}
           retention-days: 30
 

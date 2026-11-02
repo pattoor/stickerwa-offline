@@ -11,6 +11,11 @@ import java.io.File
 /**
  * WhatsApp Stickers Content Provider.
  * Authority must match AndroidManifest.xml and be unique.
+ *
+ * PLAN A (read-only): WhatsApp does not expose an API to read stickers from
+ * other apps. This provider only serves stickers created by this app.
+ * To "read" existing stickers, the user imports image files manually via
+ * the app's "Imagen" button, which creates a copy in the app's storage.
  */
 class StickerContentProvider : ContentProvider() {
 
