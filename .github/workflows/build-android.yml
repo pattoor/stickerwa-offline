@@ -37,12 +37,22 @@ jobs:
       - name: Setup Android SDK
         run: |
           echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
+          ls $ANDROID_SDK_ROOT
+          echo "---"
+          ls $ANDROID_SDK_ROOT/platforms 2>/dev/null || echo "no platforms dir"
+          echo "---build-tools---"
+          ls $ANDROID_SDK_ROOT/build-tools 2>/dev/null || echo "no build-tools dir"
           # Install required SDK components if missing
           if [ -d "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" ]; then
+            echo "cmdline-tools found"
             yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
-            $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>/dev/null || true
+            $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" 2>&1 || true
+          elif [ -d "$ANDROID_SDK_ROOT/cmdline-tools" ]; then
+            echo "cmdline-tools found (no latest)"
+            ls $ANDROID_SDK_ROOT/cmdline-tools
+          else
+            echo "no cmdline-tools found"
           fi
-          # Ensure ANDROID_HOME is set
           echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
 
       - name: Install dependencies
