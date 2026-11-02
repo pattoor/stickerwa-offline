@@ -3,7 +3,6 @@ name: Build Android
 on:
   push:
     branches: [main, dev]
-  push:
     tags: ["v*"]
   workflow_dispatch:
     inputs:
